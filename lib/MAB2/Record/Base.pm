@@ -12,12 +12,12 @@ MAB2::Record::Base - Access an MAB2 record
  use MAB2::Record::Base;
 
  # Constructor
- my $mab2raw = '00296nM2.01200024      k001 1000016-1\\c^002a19890418'.
-    '\\c^004 20010812\\c^028b1000016-1\\c^029 HK00158537\\c^030 aa1dc'.
-    '|m\\c^036aIT\\c^066 |\\c^070 9002\\c^070aHBZ\\c^800 Accademia Na'.
-    'zionale di San Luca <Roma>\\c^810 Accademia di San Luca <Roma, A'.
-    'ccademia Nazionale di San Luca>\\c^850aReale Accademia di San Lu'.
-    'ca <Roma>\\c^852a45335-3\\c^\\c]';
+ my $mab2raw = "00296nM2.01200024      k001 1000016-1\c^002a19890418".
+    "\c^004 20010812\c^028b1000016-1\c^029 HK00158537\c^030 aa1dc".
+    "|m\c^036aIT\c^066 |\c^070 9002\c^070aHBZ\c^800 Accademia Na".
+    "zionale di San Luca <Roma>\c^810 Accademia di San Luca <Roma, A".
+    "ccademia Nazionale di San Luca>\c^850aReale Accademia di San Lu".
+    "ca <Roma>\c^852a45335-3\c^\c]";
  my $mab2 = MAB2::Record::Base->new($mab2raw);
  # $mab2 now blessed into MAB2::Record::gkd because it is a gkd record
 
@@ -44,9 +44,94 @@ an object which is blessed into one of the five above listed classes.
 Some level of proficiency in dealing with MAB2 records is needed for
 the user of this module for further processing of the objects. It is
 recommended to use C<Data::Dumper> to get acquainted with the raw format
-of the created objects. Please note that the object contains both the
-original string in its own byte oriented encoding and all fields in
-Unicode. The conversion is done by the C<Encode::MAB2> module.
+of the created objects.
+
+For illustration purpose, here is the Data::Dumper output of the full
+object into which the sample record from the SYNOPSIS section is
+transformed:
+
+  $VAR1 = bless( [
+                   '...',
+                   undef,
+                   [
+                     {
+                       'nicht_benutzt' => [
+                                            '      '
+                                          ],
+                       'datenanfangsadresse' => [
+                                                  '00024'
+                                                ],
+                       'satztyp' => [
+                                      'k',
+                                      'Koerperschaftsnamensatz (MAB-GKD)'
+                                    ],
+                       'versionsangabe' => [
+                                             'M2.0'
+                                           ],
+                       'satzstatus' => [
+                                         'n',
+                                         'neuer Datensatz'
+                                       ],
+                       'indikatorlaenge' => [
+                                              '1'
+                                            ],
+                       'satzlaenge' => [
+                                         '00296'
+                                       ],
+                       'teilfeldkennungslaenge' => [
+                                                     '2'
+                                                   ]
+                     },
+                     [
+                       [
+                         '001',
+                         ' ',
+                         '1000016-1',
+                         'identifikationsnummer des datensatzes'
+                       ],
+                       [
+                         '002',
+                         'a',
+                         '19890418',
+                         'datum der ersterfassung / fremddatenuebernahme'
+                       ],
+                       [
+                         '004',
+                         ' ',
+                         '20010812',
+                         'erstellungsdatum des austauschsatzes'
+                       ],
+                       ...
+                       [
+                         '810',
+                         ' ',
+                         'Accademia di San Luca <Roma, Accademia Nazionale di San 
+  Luca>',
+                         '1. verweisungsform zum namen der koerperschaft'
+                       ],
+                       [
+                         '850',
+                         'a',
+                         'Reale Accademia di San Luca <Roma>',
+                         '1. frueherer, zeitweiser oder spaeterer name der koerper
+  schaft'
+                       ],
+                       [
+                         '852',
+                         'a',
+                         '45335-3',
+                         'identifikationsnummer des 1. frueheren, zeitweisen oder 
+  spaeteren namens'
+                       ]
+                     ]
+                   ],
+                   '...'
+                 ], 'MAB2::Record::gkd' );
+
+
+Please note that the object contains both the original string in its
+own byte oriented encoding and all fields in Unicode. The conversion
+is done by the C<Encode::MAB2> module.
 
 The normal way of accessing MAB2 records is through the use of either
 the C<Tie::MAB2::Recno> or C<Tie::MAB2::Id> class. The C<Tie::MAB2::Recno>
@@ -72,7 +157,9 @@ C<Encode::MAB2>, C<Tie::MAB2::Recno>, C<Tie::MAB2::Id>
 =cut
 
 use constant RAW => 0;
-use constant INTERNALS => 1;
+use constant INTERNALS => 1; # maybe nonsense: sometimes recno,
+                             # sometimes id, whatever the *caller*
+                             # wants to have there
 use constant STRUCT => 2;
 use constant DUMPVALUE => 3;
 
@@ -407,6 +494,21 @@ sub subrecords {
   my($self) = shift;
   $self->_struct;
   @{$self->[STRUCT][1]};
+}
+
+sub subrecords_ref {
+  my($self) = shift;
+  $self->_struct;
+  $self->[STRUCT][1];
+}
+
+sub date_004 {
+  my($self) = @_;
+  my $sr = $self->subrecords_ref;
+  for my $i (0..$#$sr) {
+    next unless $sr->[$i][0] eq "004";
+    return $sr->[$i][2];
+  }
 }
 
 1;

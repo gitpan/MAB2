@@ -1,7 +1,7 @@
 package Encode::MAB2;
 
 use strict;
-our $VERSION = "0.05";
+our $VERSION = "0.06";
 
 use Encode ();
 use Encode::MAB2table;
@@ -20,7 +20,8 @@ sub decode {
     $str =~ s{($combinings+)(.)}{($2 eq "\xf5" ? "i" : $2) . $1}ge; #};
     if ($chk) {
       if ($str =~ s/($combinings+)\z//) {
-        $_[1] = $1; # we have 'sub needs_lines {1}', so this should never happen
+        $_[1] = $1; # we have 'sub needs_lines {1}', so this should
+                    # never happen
       } else {
         $_[1] = '';
       }
@@ -58,22 +59,24 @@ not provide a way to convert a Unicode string back into MAB2 encoding.
 =head1 Background
 
 MAB2 is a German library data format and an encoding almost completely
-based on ASCII and ISO 5426:1983. I could not find any official work
-that maps the MAB2 specification to Unicode, so I made my own mapping
-for this module.
+based on ASCII and ISO 5426:1983. On 2003-09-08 Die Deutsche
+Bibliothek published
+L<http://www.ddb.de/professionell/pdf/mab_unic.pdf>, the first
+official document that maps the MAB2 encoding to Unicode 4.0. The
+mapping provided by this module follows this publication. See below
+for small additional convenience tricks that are also implemented by
+the module to avert common errors.
 
-      ALERT: this mapping is not endorsed by any official body.
-
-                         USE AT YOUR OWN RISK
+                     ALERT: USE AT YOUR OWN RISK
 
                    You are responsible to determine
                 applicability of information provided.
 
-
 =head1 Links
 
-The following documents provided invaluable help in composing the
-mapping presented in this module:
+Besides the above mentioned mab_unic.pdf, the following documents
+provided invaluable help in developing the mapping presented in this
+module:
 
 =over
 
@@ -91,24 +94,16 @@ Wayne Schneider in L<http://crl.nmsu.edu/~mleisher/csets/ISO053.TXT>
 
 =item *
 
-Thanks go also to Reinhold Heuvelmann of I<Die Deutsche Bibliothek> who
-sent me a Word document about the preliminary mapping that the
-I<Deutsche Bibliothek> has considered so far.
+Thanks also go to Reinhold Heuvelmann of I<Die Deutsche Bibliothek> who
+sent me an early draft of mab_unic.pdf.
 
 =back
-
-Unfortunately the cited documents do not agree in all points, so I had
-to break the tie: in all cases of disagreement I followed the ISO
-document. The resulting mapping is coded in the file C<MAB2table.ucm>.
-I'd hope that the members of the I<MAB-Ausschuss> will take a very
-close look at this module. And please let me know if there is some
-work underway, so that all parties that have done some work on this
-can agree on a single recoding system from MAB to Unicode.
 
 =head1 Normalization
 
 This module uses the module Unicode::Normalize to deliver the
-combining characters in the MAB2 record in normalization form C. We have taken precautions against common errors in MAB records:
+combining characters in the MAB2 record in normalization form C. We
+have taken precautions against common errors in MAB records:
 
 =over 4
 

@@ -23,7 +23,11 @@ sub TIEARRAY {
   my $self = {};
   $self->{ARGS} = \%args;
   die "Could not tie: required argument file missing" unless exists $args{file};
-  open my $fh, "<", $args{file} or die "Could not open $args{file}: $!";
+  my $fh;
+  unless (open $fh, "<", $args{file}) {
+    require Carp;
+    Carp::confess("Could not open $args{file}: $!");
+  }
   $self->{FH} = $fh;
 
   my $buf;

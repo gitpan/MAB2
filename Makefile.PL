@@ -42,12 +42,11 @@ WriteMakefile(
               INC		=> "-I$encode_h",
 	      NAME		=> 'Encode::MAB2table',
 	      DISTNAME		=> 'MAB2',
-	      VERSION_FROM	=> "lib/Encode/MAB2table.pm",
+	      VERSION_FROM	=> "lib/Encode/MAB2.pm",
 	      OBJECT		=> '$(O_FILES)',
 	      'dist'		=> {
+		  DIST_DEFAULT => 'all metafile sign tardist',
 		  COMPRESS	=> 'gzip -9f',
-		  SUFFIX	=> 'gz',
-		  DIST_DEFAULT => 'all tardist',
 	      },
 	      # MAN3PODS	=> {},
 	      PREREQ_PM => {
@@ -167,7 +166,7 @@ sub postamble
 	}
 	my $plib   = $self->{PERL_CORE} ? '"-I$(PERL_LIB)"' : '';
 	my $ucopts = '-"Q"';
-	$str .=  
+	$str .=
 	    qq{\n\t\$(PERL) $plib $enc2xs $ucopts -o \$\@ -f $table.fnm\n\n};
 	open (FILELIST, ">$table.fnm")
 	    || die "Could not open $table.fnm: $!";
@@ -177,6 +176,14 @@ sub postamble
 	}
 	close(FILELIST);
     }
+
+    # DONE with Encode's postamble, now for my own:
+    $str .= q{
+sign ::
+	cpansign -s
+
+};
+
     return $str;
 }
 

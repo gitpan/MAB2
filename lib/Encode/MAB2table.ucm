@@ -1,9 +1,9 @@
 #
 #    Name:            MAB2 to Unicode table
 #    Unicode version: 3.2
-#    Table version:   0.01 (Proof of concept)
-#    Date:            2002-05-03
-#    Authors:         Andreas Koenig <andreas.koenig@anima.de>
+#    Table version:   0.02
+#    Date:            2003-10-10
+#    Author:          Andreas Koenig <andreas.koenig@anima.de>
 #
 #	Copyright (c) Andreas Koenig; All Rights Reserved
 #
@@ -60,7 +60,7 @@ CHARMAP
 <U0021>  \x21 |0   # (2/1) Ausrufungszeichen
 <U0022>  \x22 |0   # (2/2) doppeltes Anfuehrungszeichen oben
 <U0023>  \x23 |0   # (2/3) Nummernzeichen
-<U00A4>  \x24 |0   # (2/4) internationales Waehrungszeichen
+<U0024>  \x24 |0   # Dollar (no round trip! In 0.01: internat. Waehrungszeichen)
 <U0025>  \x25 |0   # (2/5) Prozent
 <U0026>  \x26 |0   # (2/6) kaufm. und
 <U0027>  \x27 |0   # (2/7) Apostroph
@@ -150,13 +150,13 @@ CHARMAP
 <U007B>  \x7B |0   # (7/11) geschweifte Klammer auf (Stichwort-Beginn)
 <U007C>  \x7C |0   # (7/12) vertikaler Strich / Fuellzeichen
 <U007D>  \x7D |0   # (7/13) geschweifte Klammer zu (Stichwort-Ende)
-<U00AF>  \x7E |0   # (7/14) Balken
+<U007E>  \x7E |0   # Tilde (in 0.01: Balken)
 <U0088>  \x88 |0   # (8/8) Nichtsortier-Zeichen, Beginn
 <U0089>  \x89 |0   # (8/9) Nichtsortier-Zeichen, Ende
 <U00A1>  \xA1 |0   # (10/1) einleit. Ausrufungszeichen
 <U201E>  \xA2 |0   # (10/2) doppeltes Anfuehrungszeichen unten	
 <U00A3>  \xA3 |0   # (10/3) Pfund Sterling
-<U0024>  \xA4 |0   # (10/4) Dollar
+<U0024>  \xA4 |3   # (10/4) Dollar
 <U00A5>  \xA5 |0   # (10/5) Yen
 <U2020>  \xA6 |0   # (10/6) Kreuz
 <U00A7>  \xA7 |0   # (10/7) Paragraph

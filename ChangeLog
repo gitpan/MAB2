@@ -1,3 +1,11 @@
+2003-10-10  Andreas Koenig  <andreas.koenig@anima.de>
+
+	* Added copyright 2003
+
+	* The publication of mab_unic.pdf makes changes to the
+	MAB2table.ucm file necessary, namely the entries for Balken and
+	Dollar.
+
 2002-09-05  Andreas J. Koenig  <andreas.koenig@anima.de>
 
 	* remove deprecated Tie/MAB2/Raw.pm from distribution
